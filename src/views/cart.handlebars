@@ -1,0 +1,14 @@
+<div>
+    <h1> Carrito de compras de {{data._user_id.firstName}} {{data._user_id.lastName}} </h1>
+
+    {{#each data.products}}
+    <div class="cardProduct">
+       <h2>{{_id.title}}</h2>
+       <p>
+        price: $ {{_id.price}}<br>
+        cantidad : {{qty}}
+       </p>
+    </div>
+    {{/each}}
+
+</div>
