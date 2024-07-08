@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
-import chatModel from "./dao/models/chat.model.js";
-import productsModel from "./dao/models/products.model.js";
+import chatModel from "../models/chat.model.js";
+import productsModel from "../models/products.model.js";
 
 const initSocket = (httpServer) => {
     

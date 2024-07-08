@@ -3,17 +3,17 @@ import passport from 'passport';
 
 
 import config from "../config.js";
-import UsersManager from "../dao/usersManager.js";
-import { createHash, verifyRequiredBody } from "../utils.js";
+import UserController from "../controller/user.controller.js";
+import { createHash, verifyRequiredBody } from "../services/utils.js";
 import initAuthStrategies from '../auth/passport.strategies.js';
 
-const usersManager = new UsersManager()
+const controller = new UserController()
 const router = Router()
 initAuthStrategies();
 
 router.get("/", async (req, res) => {
     try {
-        const users = await usersManager.get()
+        const users = await controller.get()
 
         res.status(200).send({ origin: config.SERVER, payload: users })
     } catch (error) {
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 router.get("/:pid", async (req, res) => {
     try {
         const pid = req.params.pid
-        const user = await usersManager.getById(pid)
+        const user = await controller.getById(pid)
 
         res.status(200).send({ origin: config.SERVER, payload: user })
     } catch (error) {
@@ -64,7 +64,7 @@ router.put("/:pid", async (req, res) => {
         const filter = { _id: req.params.pid };
         const update = req.body;
         const options = { new: true };
-        const user = await usersManager.update(filter, update, options);
+        const user = await controller.update(filter, update, options);
 
         res.status(200).send({ origin: config.SERVER, payload: user });
     } catch (error) {
@@ -75,7 +75,7 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:uid", async (req, res) => {
     try {
         const uid = { _id: req.params.uid }
-        await usersManager.delete(uid);
+        await controller.delete(uid);
         console.log(`usuario eliminado de la base de datos`);
 
         res.status(200).send({ origin: config.SERVER, payload: "eliminado" });

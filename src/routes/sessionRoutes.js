@@ -2,11 +2,9 @@ import {Router} from "express";
 import passport from 'passport';
 
 import config from "../config.js";
-import UsersManager from "../dao/usersManager.js";
-import { isValidPassword, verifyRequiredBody } from '../utils.js';
+import { isValidPassword, verifyRequiredBody } from '../services/utils.js';
 import initAuthStrategies from '../auth/passport.strategies.js';
 
-const usersManager = new UsersManager()
 const router = Router()
 initAuthStrategies();
 

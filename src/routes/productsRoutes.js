@@ -1,15 +1,15 @@
 import { Router } from "express";
 import config  from "../config.js";
-import { uploader } from '../uploader.js';
-import ProductsManager from "../dao/productsManager.js";
+import { uploader } from '../services/uploader.js';
+import ProductController from "../controller/product.controller.js";
 // import productsModel from "../dao/models/products.model.js"
 
-const productsManager = new ProductsManager()
+const controller = new ProductController()
 const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-            const products = await productsManager.get({limit: req.query.limit || 10, page: req.query.page || 1, query : req.query.query || ""})
+            const products = await controller.get({limit: req.query.limit || 10, page: req.query.page || 1, query : req.query.query || ""})
             res.status(200).send({origin: config.SERVER, payload: products})
         
 
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 router.get("/:pid", async (req, res) => {
     try {
         const pid = req.params.pid
-        const product = await productsManager.getById(pid)
+        const product = await controller.getById(pid)
         console.log(product);
 
         res.status(200).send({origin: config.SERVER, payload: product})
@@ -35,10 +35,10 @@ router.post("/", uploader.single('thumbnails'), async (req, res) => {
         if (req.file) {
             const thumbnail = {thumbnail: req.file.originalname || ""}
             const data = {...req.body, ...thumbnail}
-            const process = await productsManager.add(data)
+            const process = await controller.add(data)
             res.status(200).send({ origin: config.SERVER, payload: process });
         } else {
-            const process = await productsManager.add(req.body)     
+            const process = await controller.add(req.body)     
             res.status(200).send({ origin: config.SERVER, payload: process });
         }
         
@@ -52,7 +52,7 @@ router.put("/:pid", async (req, res) => {
         const filter = { _id: req.params.pid };
         const update = req.body;
         const options = { new: true };
-        const process = await productsManager.update(filter, update, options);
+        const process = await controller.update(filter, update, options);
         
         res.status(200).send({ origin: config.SERVER, payload: process });
     } catch (error) {
@@ -63,7 +63,7 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const pid = {_id : req.params.id } 
-        await productsManager.delete(pid);
+        await controller.delete(pid);
         console.log(`producto eliminado de la base de datos`);
 
         res.status(200).send({ origin: config.SERVER, payload: "eliminado" });

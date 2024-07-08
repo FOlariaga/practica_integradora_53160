@@ -1,7 +1,7 @@
-import productsModel from "./models/products.model.js";
+import productsModel from "../models/products.model.js";
 class ProductManager {
 
-    async get({limit, page, query}) {
+    async get(limit, page, query) {
 
         if (query == "") {
             const products = await productsModel.paginate({}, { page: page, limit: limit , lean : true})

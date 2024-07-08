@@ -7,7 +7,7 @@ import MongoStore from "connect-mongo";
 import passport from 'passport';
 
 import config from "./config.js"
-import initSocket from "./sockets.js";
+import initSocket from "./services/sockets.js";
 import viewsRoutes from "./routes/viewsRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";

@@ -1,13 +1,13 @@
 import { Router } from "express";
 import config from "../config.js";
-import CartsManager from "../dao/cartsManager.js";
+import CartController from "../controller/cart.controller.js";
 
-const cartsManager = new CartsManager()
+const controller = new CartController()
 const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        const carts = await cartsManager.get()
+        const carts = await controller.get()
 
         res.status(200).send({ origin: config.SERVER, payload: carts });
     } catch (err) {
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 router.get("/:cid", async (req, res) => {
     try {
         const cid = req.params.cid
-        const cart = await cartsManager.getById(cid)
+        const cart = await controller.getById(cid)
 
         res.status(200).send({origin: config.SERVER, payload: cart})
     } catch (error) {
@@ -28,7 +28,7 @@ router.get("/:cid", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const cart = await cartsManager.add(req.body)     
+        const cart = await controller.add(req.body)     
             res.status(200).send({ origin: config.SERVER, payload: cart });
     } catch (error) {
         res.status(500).send({ origin: config.SERVER, payload: null})
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
 router.delete("/:cid", async (req, res) => {
     try {
         const cid = {_id : req.params.cid } 
-        await cartsManager.delete(cid);
+        await controller.delete(cid);
         console.log(`se vacio el carrito`);
         
         res.status(200).send({ origin: config.SERVER, payload: "carrito vacio" });
@@ -53,7 +53,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     try {
         const cid = req.params.cid
         const pid = req.params.pid
-        const cart = await cartsManager.deleteProductInCart(cid,pid)
+        const cart = await controller.deleteProductInCart(cid,pid)
         
         res.status(200).send({ payload: cart });
     } catch (error) {
@@ -67,7 +67,7 @@ router.put("/:cid", async (req, res) => {
         const filter = { _id: req.params.cid };
         const update = req.body;
         const options = { new: true };
-        const cart = await cartsManager.updateProducts(filter, update, options);
+        const cart = await controller.updateProducts(filter, update, options);
         
         res.status(200).send({ origin: config.SERVER, payload: cart });
     } catch (error) {
@@ -81,7 +81,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
     const update = req.body
     const options = { new :true }
     const filterProduct = req.params.pid
-    const cart = await cartsManager.updateQty(filterCart,update,options,filterProduct)
+    const cart = await controller.updateQty(filterCart,update,options,filterProduct)
 
     res.status(200).send({ origin: config.SERVER, payload: cart });
 })
@@ -96,7 +96,7 @@ router.post("/addProduct", async (req, res) => {
             const filter = {_user_id :req.session.user._id}
             console.log(filter);
             //ejecuto el manager para agregar al carrito
-            const cart = await cartsManager.addProductInCart(data,filter)  
+            const cart = await controller.addProductInCart(data,filter)  
     
             return res.redirect("/cart") 
         }

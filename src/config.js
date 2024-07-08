@@ -1,15 +1,18 @@
 import * as url from 'url';
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const config = {
     SERVER: "atlas",
-    PORT: 8080,
+    PORT: process.env.PORT || 5050,
     DIRNAME: url.fileURLToPath(new URL('.', import.meta.url)),
     get UPLOAD_DIR() { return `${this.DIRNAME}/public/img` },
-    MONGODB_URI: "mongodb+srv://FOlariaga:QNxt9FsbrAm0XFHz@clustercoder53160fo.hnz3aid.mongodb.net/ecommerce",
-    SECRET: 'FOlariaga_53160',
-    GITHUB_CLIENT_ID: "Iv23liWOIlrFq5JpIZH2",
-    GITHUB_CLIENT_SECRET: "13c1b5d0111c1dfcade8640e478d9408aea3dd3c",
-    GITHUB_CALLBACK_URL : "http://localhost:8080/api/sessions/ghlogincallback"
+    MONGODB_URI: process.env.MONGODB_URI,
+    SECRET: process.env.SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GITHUB_CALLBACK_URL : process.env.GITHUB_CALLBACK_URL
 }
 
 export default config;

@@ -1,6 +1,6 @@
-import cartsModel from "./models/carts.model.js";
-import productModel from "./models/products.model.js"
-import userModel from "./models/users.model.js"
+import cartsModel from "../models/carts.model.js";
+import productModel from "../models/products.model.js"
+import userModel from "../models/users.model.js"
 
 class CartsManager {
 
@@ -36,9 +36,7 @@ class CartsManager {
         return cart
     }
 
-    async add(idUser) {
-        const data = { _user_id: idUser, products: [] }
-
+    async add(data) {
         const newCart = await cartsModel.create(data)
         return newCart
     }

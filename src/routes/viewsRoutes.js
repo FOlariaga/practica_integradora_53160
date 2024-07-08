@@ -1,21 +1,21 @@
 import { Router} from "express";
-import ProductsManager from "../dao/productsManager.js";
-import CartsManager from "../dao/cartsManager.js";
+import ProductController from "../controller/product.controller.js";
+import CartController from "../controller/cart.controller.js";
 
-const productsManager = new ProductsManager()
-const cartsManager = new CartsManager()
+const productController = new ProductController()
+const cartController = new CartController()
 
 const router = Router()
 
 router.get("/products", async (req, res) => {
-    const products = await productsManager.get({limit: req.query.limit || 10, page: req.query.page || 1, query : req.query.query || "" });
+    const products = await productController.get({limit: req.query.limit || 10, page: req.query.page || 1, query : req.query.query || "" });
 
     res.render("products", {data: Object.assign(products,{category : req.query.query || ""})})
 })
 
 router.get("/product/:pid", async (req, res) => {
     const pid = req.params.pid
-    const product = await productsManager.getById(pid)
+    const product = await productController.getById(pid)
 
     res.render("detail", { data: product })
 })
@@ -30,13 +30,13 @@ router.get("/cart", async (req, res) => {
         return res.redirect("/login")
     }
 
-    const cart = await cartsManager.getByuser(req.session.user._id)
+    const cart = await cartController.getByuser(req.session.user._id)
     res.render("cart", {data: cart})
 })
 
 router.get("/cart/:cid", async (req, res) => {
     const cid = req.params.cid
-    const cart = await cartsManager.getById(cid)
+    const cart = await cartController.getById(cid)
     console.log(cart);
     res.render("cart", {data: cart})
 })

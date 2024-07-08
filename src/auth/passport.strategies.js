@@ -2,15 +2,15 @@ import passport, { Passport } from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 
-import CartsManager from "../dao/cartsManager.js";
+import CartController from "../controller/cart.controller.js";
 
-import UsersManager from "../dao/usersManager.js";
-import { createHash, isValidPassword } from "../utils.js";
+import UserController from "../controller/user.controller.js";
+import { createHash, isValidPassword } from "../services/utils.js";
 import config from "../config.js";
 
 
-const cartsManager = new CartsManager()
-const usersManager = new UsersManager()
+const cartController = new CartController()
+const userController = new UserController()
 const localStrategy = local.Strategy
 
 const initAuthStrategies = () => {
@@ -19,7 +19,7 @@ const initAuthStrategies = () => {
         { passReqToCallback: true, usernameField: 'email' },
         async (req, username, password, done) => {
             try {
-                const userSaved = await usersManager.getByEmail(username);
+                const userSaved = await userController.getByEmail(username);
 
                 if (userSaved && isValidPassword(password, userSaved.password)) {
                     const { password, ...filteredUserSaved } = userSaved;
@@ -39,7 +39,7 @@ const initAuthStrategies = () => {
             try {
                 const { firstName, lastName, email, password, age } = req.body
 
-                const user = await usersManager.add({ firstName, lastName, email, password: createHash(password), age})
+                const user = await userController.add({ firstName, lastName, email, password: createHash(password), age})
 
                 if (user.exist) {
                     console.log(`el usuario ya se registro con el email${email}`);
@@ -48,7 +48,7 @@ const initAuthStrategies = () => {
                 
                 console.log(user.payload);
 
-                await cartsManager.add(user.payload._id)
+                await cartController.add(user.payload._id)
 
                 return done(null, user.payload)
 
@@ -72,7 +72,7 @@ const initAuthStrategies = () => {
 
                 if (email) {
 
-                    const userSaved = await usersManager.getByEmail(email)
+                    const userSaved = await userController.getByEmail(email)
 
                     if (!userSaved) {
                         const user = {
@@ -82,7 +82,7 @@ const initAuthStrategies = () => {
                             password: 'none'
                         }
 
-                        const process = await usersManager.add(user)
+                        const process = await userController.add(user)
 
                         return done(null, process)
                     } else {
